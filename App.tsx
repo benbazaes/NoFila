@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './src/modulos/HomeScreen';
+import HomeScreen, { credendencialType } from './src/modulos/HomeScreen';
 import ProfileScreen from './src/modulos/ProfileScreen';
 import { NativeBaseProvider, Box, View } from 'native-base';
 import { SessionContext } from './src/sistema/context/SessionContext';
@@ -15,10 +15,12 @@ const App = () => {
   const [tokenUsuario, setTokenUsuario] = React.useState<String|null>(null);
 
   const authContext = React.useMemo(() => ({
-    signIn: async () => {
+    signIn: async (credenciales: credendencialType) => {
+      console.log(credenciales);
+      
       await axios.post('http://10.0.2.2:8000/api/login', {
-        'correo': 'benjamin.bazaes@gmail.com',
-        'password': 'Admin123',
+        'correo': credenciales.correo,
+        'password': credenciales.password,
       })
       .then(response => {
         console.log(response);

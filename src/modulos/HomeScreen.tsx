@@ -2,12 +2,24 @@ import { Center, Input, Stack, Button } from 'native-base';
 import React from 'react';
 import { SessionContext } from '../sistema/context/SessionContext';
 
+export type credendencialType = {
+    correo: string,
+    password:string
+};
+
 const HomeScreen = ({ navigation } : {navigation: any}) => {
     const [show, setShow] = React.useState<boolean>(false);
+    const [credenciales, setCredenciales] = React.useState<credendencialType>({correo:'', password: ''});
+    const [correo, setCorreo] = React.useState<string>('');
 
     const { signIn } = React.useContext(SessionContext);
 
     const handleClick = () => setShow(!show)
+
+    const handleOnChange = (name:string, value: string) => {
+        setCredenciales({...credenciales, [name]:value});
+        console.log(credenciales);
+    }
 
     return (
         <Center>
@@ -16,7 +28,7 @@ const HomeScreen = ({ navigation } : {navigation: any}) => {
                 space={4}
                 w={{base: "75%", md: "25%",}}
             >
-                <Input variant="outline" placeholder="Correo" size='xl'/>
+                <Input variant="outline" placeholder="Correo" size='xl' onChangeText={(event) => handleOnChange('correo',event)} value={credenciales.correo}/>
                 <Input
                     type={show ? "text" : "password"}
                     size='xl'
@@ -25,9 +37,11 @@ const HomeScreen = ({ navigation } : {navigation: any}) => {
                     {show ? "Hide" : "Show"}
                     </Button>
                     }
+                    onChangeText={(event) => handleOnChange('password',event)} 
+                    value={credenciales.password}
                     placeholder="Contraseña"
                 />
-                <Button onPress={signIn}>Iniciar Session</Button>
+                <Button onPress={() => signIn(credenciales)}>Iniciar Session</Button>
                 <Button
                 onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
                 >Go to Jane's profile</Button>
