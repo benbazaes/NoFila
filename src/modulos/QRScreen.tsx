@@ -3,9 +3,14 @@ import React from "react";
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import { Linking, StyleSheet, Text, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
+import FilaEsperaClienteScreen from "./FilaEsperaClienteScreen";
 
-const ProfileScreen = ({ navigation, route }: {navigation: any, route:any}) => {
+const QRScreen = ({ navigation, route }: {navigation: any, route:any}) => {
     const [viewFocused, setViewFocused] = React.useState<boolean>(true);
+    const [responseFila, setResponseFila] = React.useState<any>();
+    const _token: any = AsyncStorage.getItem('token');
 
     React.useEffect(() => {
       const onFocus = navigation.addListener('focus', () => {
@@ -20,10 +25,29 @@ const ProfileScreen = ({ navigation, route }: {navigation: any, route:any}) => {
       onBlur();
       }, [navigation]);
 
-    const onSuccess = (e : any) => {
-        Linking.openURL(e.data).catch(err =>
+    const onSuccess = async(e : any) => {
+      await axios.post('http://192.168.0.11:8000/api/servicioCliente', {
+        'id_servicio': e.data,
+        'id_usuario': '0a4e6d1a-ca03-4382-8a28-a4a8cbd72982'
+      },
+      {
+        headers:{
+          'Authorization':`Bearer ${_token._W}`
+        }
+      }
+      )
+      .then(response => {
+        setResponseFila(response.data);
+        navigation.navigate('FilaEsperaClienteScreen', {
+          xd: response.data
+        });
+      })
+      .catch(error => {
+        console.log(error,'jhjk');
+      });
+       /*  Linking.openURL(e.data).catch(err =>
             console.error('An error occured', err)
-        );
+        ); */
     }
 
     return(
@@ -73,4 +97,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default ProfileScreen;
+export default QRScreen;

@@ -42,9 +42,6 @@ const HomeScreen = ({ navigation } : {navigation: any}) => {
                     placeholder="Contraseña"
                 />
                 <Button onPress={() => signIn(credenciales)}>Iniciar Session</Button>
-                <Button
-                onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
-                >Go to Jane's profile</Button>
             </Stack>
         </Center>
     );
