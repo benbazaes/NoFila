@@ -1,4 +1,4 @@
-import { Center, Input, Stack, Button, Image, Modal, FormControl } from 'native-base';
+import { Center, Input, Stack, Button, Image } from 'native-base';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -7,7 +7,7 @@ export type credendencialType = {
     password:string
 };
 
-const NavigationAdministratorScreen = ({ navigation } : {navigation: any}) => {
+const NavigationAdministrativoScreen = ({ navigation } : {navigation: any}) => {
 
     return (
         <Center>
@@ -17,9 +17,9 @@ const NavigationAdministratorScreen = ({ navigation } : {navigation: any}) => {
                 w={{base: "75%", md: "25%",}}
             >
                 <Image source={require("../sistema/assets/imagenes/noFilaLogo.png")} style={styles.image}></Image>
-                <Button  onPress={() => navigation.navigate('Gestionar Administrativo')}>Gestionar Administrativo</Button>
-                <Button  onPress={() => navigation.navigate('Gestionar Cliente')}>Gestionar Cliente</Button>
-                <Button  onPress={() => navigation.navigate('Gestionar Sistema')}>Gestionar Sistema</Button>
+                <Button  onPress={() => navigation.navigate('Fila')}>Visualizar Fila</Button>
+                <Button  onPress={() => navigation.navigate('Informacion Fila')}>Informacion Fila</Button>
+                <Button  onPress={() => navigation.navigate('Generar Qr')}>Generar QR</Button>
             </Stack>
         </Center>
     );
@@ -34,4 +34,4 @@ const NavigationAdministratorScreen = ({ navigation } : {navigation: any}) => {
     },
   });
 
-export default NavigationAdministratorScreen;
+export default NavigationAdministrativoScreen;

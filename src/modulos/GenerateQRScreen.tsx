@@ -20,7 +20,7 @@ const GenerateQRScreen = ({ navigation } : {navigation: any}) => {
     const getServicio = async() => {
       const _token = await AsyncStorage.getItem('token');
       const _responseLogin = await AsyncStorage.getItem('responseLogin');
-      await axios.get(`http://192.168.0.11:8000/api/servicios/${_responseLogin != null ? JSON.parse(_responseLogin) : null}`,
+      await axios.get(`http://192.168.0.2:8000/api/servicios/${_responseLogin != null ? JSON.parse(_responseLogin) : null}`,
         {
           headers:{
             'Authorization':`Bearer ${_token}`
@@ -39,7 +39,7 @@ const GenerateQRScreen = ({ navigation } : {navigation: any}) => {
     const onGenerate = async(sistema: string) => {
         setLoading(true);
         const _token = await AsyncStorage.getItem('token');
-        await axios.get(`http://192.168.0.11:8000/api/qrCode/${sistema}`,
+        await axios.get(`http://192.168.0.2:8000/api/qrCode/${sistema}`,
         {
           headers:{
             'Authorization':`Bearer ${_token}`
@@ -67,7 +67,8 @@ const GenerateQRScreen = ({ navigation } : {navigation: any}) => {
                 space={4}
                 w={{base: "75%", md: "25%",}}
             >
-                <SvgXml xml={xml.current === undefined ? '<svg></svg>' : xml.current} width="100%" height="100%" />
+                <SvgXml xml={xml.current === undefined ? '<svg></svg>' : xml.current} width="100%" height="80%" />
+                <Button  onPress={() => navigation.navigate('Gestionar Sistema')}>Descargar QR</Button>
             </Stack>
         </Center>
     );

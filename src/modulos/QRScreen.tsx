@@ -1,16 +1,15 @@
-import { Button, Center, Input, Stack } from "native-base";
+import { Stack} from "native-base";
 import React from "react";
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import { RNCamera } from 'react-native-camera';
-import { Linking, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-import FilaEsperaClienteScreen from "./FilaEsperaClienteScreen";
 
 const QRScreen = ({ navigation, route }: {navigation: any, route:any}) => {
     const [viewFocused, setViewFocused] = React.useState<boolean>(true);
     const [responseFila, setResponseFila] = React.useState<any>();
     const _token: any = AsyncStorage.getItem('token');
+    const [errorMessage, SetErrorMessage] = React.useState<string>();
 
     React.useEffect(() => {
       const onFocus = navigation.addListener('focus', () => {
@@ -26,7 +25,7 @@ const QRScreen = ({ navigation, route }: {navigation: any, route:any}) => {
       }, [navigation]);
 
     const onSuccess = async(e : any) => {
-      await axios.post('http://192.168.0.11:8000/api/servicioCliente', {
+      await axios.post('http://192.168.0.2:8000/api/servicioCliente/entrarFila', {
         'id_servicio': e.data,
         'id_usuario': '0a4e6d1a-ca03-4382-8a28-a4a8cbd72982'
       },
@@ -37,17 +36,27 @@ const QRScreen = ({ navigation, route }: {navigation: any, route:any}) => {
       }
       )
       .then(response => {
-        setResponseFila(response.data);
-        navigation.navigate('FilaEsperaClienteScreen', {
+        setResponseFila(response.data.data);
+        navigation.navigate('Fila Espera Cliente', {
           xd: response.data
         });
       })
       .catch(error => {
-        console.log(error,'jhjk');
+        console.log(error.message,'jhjk');
+        SetErrorMessage(error)
+        Alert.alert(
+          'Alerta',
+          'Ya tiene un numero de atencion activo.',
+          [
+            {
+              text: "Cerrar",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel"
+            },
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        )
       });
-       /*  Linking.openURL(e.data).catch(err =>
-            console.error('An error occured', err)
-        ); */
     }
 
     return(
@@ -74,6 +83,7 @@ const QRScreen = ({ navigation, route }: {navigation: any, route:any}) => {
         />
         }
         </Stack>
+        
     );
 };
 
