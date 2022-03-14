@@ -11,27 +11,20 @@ export type credendencialType = {
 };
 
 export type dataFilaType = {
-  id_usuario: string,
-  hora_inicio_atencion: string,
-  numero_atencion: number,
-  servicio: servicioType,
-  tiempo_estimado: tiempo[],
-};
-
-export type tiempo = {
-  tiempo_espera: number,
-};
-
-export type servicioType = {
   id: string,
-  descripcion: string,
-  id_sistema: string,
-  id_estado_servicio: string,
+  id_servicio: string,
+  id_usuario:string,
+  hora_inicio_atencion:string,
+  hora_termino_atencion:string|null,
+  numero_atencion:number,
+  descripcion:string,
+  id_sistema:string,
+  id_estado_servicio:string,
 };
 
 const FilaEsperaClienteScreen = ({ route ,navigation } : {route: any, navigation: any}) => {
     const {xd} = route.params;
-    const dataFila : dataFilaType = xd.data;
+    const dataFila : dataFilaType = xd[0];
     const { tokenUsuario } = useSession();
     const { channel } = useBroadcast();
     const [usuariosFila, setUsuariosFila] = React.useState<number>();
@@ -43,7 +36,7 @@ const FilaEsperaClienteScreen = ({ route ,navigation } : {route: any, navigation
 
     const getUsersLineBefore = async() => {
       await axios.post('http://192.168.0.2:8000/api/getUsersInLineBefore', {
-        'id_servicio': dataFila.servicio.id,
+        'id_servicio': dataFila.id,
         'numero_atencion': dataFila.numero_atencion,
       },
       {
@@ -84,7 +77,7 @@ const FilaEsperaClienteScreen = ({ route ,navigation } : {route: any, navigation
 
     const onSalir = async() => {
       await axios.patch('http://192.168.0.2:8000/api/servicioCliente/endAtention', {
-        'id_servicio': dataFila.servicio.id,
+        'id_servicio': dataFila.id,
         'id_usuario': dataFila.id_usuario,
         'num_atencion_terminar': dataFila.numero_atencion,
       },
@@ -145,7 +138,7 @@ const FilaEsperaClienteScreen = ({ route ,navigation } : {route: any, navigation
                       Es su turno
                     </Heading>
                     <Heading size="md" ml="-1" color={'white'}>
-                      Por favor dirijase a {dataFila.servicio.descripcion}, tiene 5 minutos antes que su numero de atencion quede invalido.
+                      Por favor dirijase a {dataFila.descripcion}, tiene 5 minutos antes que su numero de atencion quede invalido.
                     </Heading>
                   </Stack>
                   <HStack alignItems="center" space={4} justifyContent='center'>
@@ -164,7 +157,7 @@ const FilaEsperaClienteScreen = ({ route ,navigation } : {route: any, navigation
                   </Heading>
                 </Stack>
                 <Text alignSelf={'center'} fontWeight="400">
-                  Servicio: {dataFila.servicio.descripcion}
+                  Servicio: {dataFila.descripcion}
                 </Text>
                 <Text alignSelf={'center'} fontWeight="400">
                   Hora entrada a la fila: {dataFila.hora_inicio_atencion}

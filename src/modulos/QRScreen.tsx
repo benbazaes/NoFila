@@ -4,12 +4,12 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import { StyleSheet, Text, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
+import { useSession } from "../sistema/context/SessionContext";
 
 const QRScreen = ({ navigation, route }: {navigation: any, route:any}) => {
     const [viewFocused, setViewFocused] = React.useState<boolean>(true);
-    const [responseFila, setResponseFila] = React.useState<any>();
+    const {responseUserLogin} = useSession();
     const _token: any = AsyncStorage.getItem('token');
-    const [errorMessage, SetErrorMessage] = React.useState<string>();
 
     React.useEffect(() => {
       const onFocus = navigation.addListener('focus', () => {
@@ -27,7 +27,7 @@ const QRScreen = ({ navigation, route }: {navigation: any, route:any}) => {
     const onSuccess = async(e : any) => {
       await axios.post('http://192.168.0.2:8000/api/servicioCliente/entrarFila', {
         'id_servicio': e.data,
-        'id_usuario': '0a4e6d1a-ca03-4382-8a28-a4a8cbd72982'
+        'id_usuario': responseUserLogin.usuario.id
       },
       {
         headers:{
@@ -36,14 +36,13 @@ const QRScreen = ({ navigation, route }: {navigation: any, route:any}) => {
       }
       )
       .then(response => {
-        setResponseFila(response.data.data);
         navigation.navigate('Fila Espera Cliente', {
           xd: response.data
         });
       })
       .catch(error => {
-        console.log(error.message,'jhjk');
-        SetErrorMessage(error)
+        console.log(error);
+        
         Alert.alert(
           'Alerta',
           'Ya tiene un numero de atencion activo.',

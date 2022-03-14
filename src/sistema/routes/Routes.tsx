@@ -16,6 +16,7 @@ import QRScreen from '../../../src/modulos/QRScreen';
 import { View } from 'native-base';
 import { ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import FilaEsperaClienteConTurnoPrevioScreen from '../../modulos/FilaEsperaClienteConTurnoPrevioScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,7 +39,7 @@ const Routes = () => {
     return(
         <NavigationContainer>
         <Stack.Navigator>
-        {tokenUsuario !== null ? (
+        {tokenUsuario !== null && isLoading === false ? (
             <>
               {responseLogin === '142e99de-53f2-11ec-a24c-f02f741864f7' ? 
               <>
@@ -63,6 +64,7 @@ const Routes = () => {
               <Stack.Screen name="No Fila Cliente" component={NavigationScreen} />
               <Stack.Screen name="Leer Qr" component={QRScreen} />
               <Stack.Screen name="Fila Espera Cliente" component={FilaEsperaClienteScreen} />
+              <Stack.Screen name="Fila Espera Cliente Turno Previo" component={FilaEsperaClienteConTurnoPrevioScreen} />
               </>
           }
               </>

@@ -13,8 +13,10 @@ export const  SessionProvider = (props:any ) => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [tokenUsuario, setTokenUsuario] = React.useState<String|null>(null);
     const [responseLogin, setResponseLogin] = React.useState<any>('');
+    const [responseUserLogin, setResponseUserLogin] = React.useState<any>();
 
     const signIn = async(credenciales: credendencialType) => {
+        setIsLoading(true);
         await axios.post('http://192.168.0.2:8000/api/login', {
             'correo': credenciales.correo,
             'password': credenciales.password,
@@ -25,6 +27,7 @@ export const  SessionProvider = (props:any ) => {
                 AsyncStorage.setItem('responseLogin', JsonValue);
                 setTokenUsuario(response.data.access_token);
                 setResponseLogin(response.data.usuario.id_rol_usuario);
+                setResponseUserLogin(response.data)
                 setIsLoading(false);
             })
             .catch(error => {console.log('ERROR',error)});
@@ -45,6 +48,7 @@ export const  SessionProvider = (props:any ) => {
         return({
             tokenUsuario,
             responseLogin,
+            responseUserLogin,
             isLoading,
             signIn,
             signOut

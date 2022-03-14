@@ -18,7 +18,6 @@ const HomeScreen = ({ navigation } : {navigation: any}) => {
 
     const handleOnChange = (name:string, value: string) => {
         setCredenciales({...credenciales, [name]:value});
-        console.log(credenciales);
     }
 
     const img = require('../sistema/assets/imagenes/noFilaLogo.png')
