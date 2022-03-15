@@ -4,6 +4,7 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { useBroadcast } from '../sistema/context/BroadcastContext';
 import { useSession } from '../sistema/context/SessionContext';
+import PushNotification from 'react-native-push-notification';
 
 export type credendencialType = {
     correo: string,
@@ -41,6 +42,25 @@ const FilaEsperaClienteScreen = ({ route ,navigation } : {route: any, navigation
       getUsersLineBefore();
     },[]);
 
+    React.useEffect(() => {
+      if(usuariosFila === 0){
+        handleNotification();
+      }
+    },[usuariosFila]);
+
+    const handleNotification = () => {
+     if(usuariosFila === 0){
+        PushNotification.localNotification({
+          channelId: "Prueba-channel",
+          vibrate: false, 
+          vibration: 1000, 
+          title: "Es su turno", 
+          message: `Aproximece a ${dataFila.servicio.descripcion}`, 
+          playSound: false, 
+        });
+      }
+    }
+
     const getUsersLineBefore = async() => {
       await axios.post('http://192.168.0.2:8000/api/getUsersInLineBefore', {
         'id_servicio': dataFila.servicio.id,
@@ -74,7 +94,8 @@ const FilaEsperaClienteScreen = ({ route ,navigation } : {route: any, navigation
         [
           {
             text: "No",
-            onPress: () => console.log("Cancel Pressed"),
+            onPress: () => console.log('no')
+            ,
             style: "cancel"
           },
           { text: "Sí", onPress: () => onSalir() }

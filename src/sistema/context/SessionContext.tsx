@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 export type credendencialType = {
     correo: string,
@@ -30,7 +31,17 @@ export const  SessionProvider = (props:any ) => {
                 setResponseUserLogin(response.data)
                 setIsLoading(false);
             })
-            .catch(error => {console.log('ERROR',error)});
+            .catch(error => {
+                console.log('ERROR',error); 
+                setIsLoading(false);
+                Alert.alert(
+                    'Alerta',
+                    `Error al inciar sesión, revise que los datos esten ingresado correctamente.`,
+                    [
+                      { text: "OK" }
+                    ]
+                  )
+            });
     };      
 
     const signOut = () => {

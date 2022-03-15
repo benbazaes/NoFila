@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Center, Stack, Button, Text, Box, Heading, HStack } from 'native-base';
 import React from 'react';
 import { Alert } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import { useBroadcast } from '../sistema/context/BroadcastContext';
 import { useSession } from '../sistema/context/SessionContext';
 
@@ -33,6 +34,23 @@ const FilaEsperaClienteScreen = ({ route ,navigation } : {route: any, navigation
     React.useEffect(() => {
       getUsersLineBefore();
     },[]);
+
+    React.useEffect(() => {
+      if(usuariosFila === 0){
+        handleNotification();
+      }
+    },[usuariosFila]);
+
+    const handleNotification = () => {
+         PushNotification.localNotification({
+           channelId: "Prueba-channel",
+           vibrate: false, 
+           vibration: 1000, 
+           title: "Es su turno", 
+           message: `Aproximece a ${dataFila.descripcion}`, 
+           playSound: false, 
+         });
+     }
 
     const getUsersLineBefore = async() => {
       await axios.post('http://192.168.0.2:8000/api/getUsersInLineBefore', {

@@ -2,6 +2,7 @@ import { Center, Input, Stack, Button, Image } from 'native-base';
 import React from 'react';
 import { SessionContext } from '../sistema/context/SessionContext';
 import {KeyboardAvoidingView, ScrollView, StyleSheet} from 'react-native';
+import PushNotification from 'react-native-push-notification';
 
 export type credendencialType = {
     correo: string,
@@ -12,6 +13,10 @@ const HomeScreen = ({ navigation } : {navigation: any}) => {
     const [show, setShow] = React.useState<boolean>(false);
     const [credenciales, setCredenciales] = React.useState<credendencialType>({correo:'', password: ''});
 
+    React.useEffect(() => {
+        createChannels();
+    },[])
+
     const { signIn } = React.useContext(SessionContext);
 
     const handleClick = () => setShow(!show)
@@ -19,6 +24,15 @@ const HomeScreen = ({ navigation } : {navigation: any}) => {
     const handleOnChange = (name:string, value: string) => {
         setCredenciales({...credenciales, [name]:value});
     }
+
+    const createChannels = () => {
+        PushNotification.createChannel(
+            {
+                channelId: "Prueba-channel",
+                channelName: "Prueba"
+            },(created) => console.log(created)
+        )
+    };
 
     const img = require('../sistema/assets/imagenes/noFilaLogo.png')
 
